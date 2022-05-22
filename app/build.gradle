@@ -36,7 +36,7 @@ android {
 
 dependencies {
     // adding webrtc jar lib to the project
-    implementation files('libs/libwebrtc.jar')
+//    implementation files('libs/libwebrtc.jar')
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
@@ -45,4 +45,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1'
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+
+    implementation 'org.webrtc:google-webrtc:1.0.32006'
 }

@@ -14,7 +14,7 @@ import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
-private const val SIGNALING_URL = "ws://192.168.31.53:8080/rtc" // use local ip for devices in local network
+private const val SIGNALING_URL = "http://192.168.1.251:8080/rtc" // use local ip for devices in local network
 //private const val SIGNALING_URL = "ws://10.0.2.2:8080/rtc" // for emulator
 
 class SignalingClient {

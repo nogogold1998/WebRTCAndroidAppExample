@@ -15,4 +15,6 @@
     <string name="button_join_session">Join session</string>
 
     <string name="button_end_session">End Session</string>
+    <string name="channel_name">channel name</string>
+    <string name="channel_description">channel description</string>
 </resources>

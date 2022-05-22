@@ -4,8 +4,6 @@ import android.content.Context
 import com.android.webrtc.example.ioc.ServiceLocator.eglBaseContext
 import com.android.webrtc.example.signaling.SignalingClient
 import com.android.webrtc.example.signaling.SignalingCommand
-import java.util.UUID
-import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -13,26 +11,21 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.webrtc.Camera2Enumerator
-import org.webrtc.IceCandidate
-import org.webrtc.MediaConstraints
+import org.webrtc.*
 import org.webrtc.MediaStreamTrack.VIDEO_TRACK_KIND
-import org.webrtc.PeerConnection
-import org.webrtc.SessionDescription
-import org.webrtc.SurfaceTextureHelper
-import org.webrtc.VideoCapturer
-import org.webrtc.VideoTrack
+import java.util.*
+import java.util.concurrent.Executors
 
-private const val VIDEO_WIDTH = 320
-private const val VIDEO_HEIGHT = 240
-private const val VIDEO_FPS = 30
+private const val VIDEO_WIDTH = 1080
+private const val VIDEO_HEIGHT = 1920
+private const val VIDEO_FPS = 60
 
 private const val ICE_SEPARATOR = '$'
 
 class WebRtcSessionManager(
     private val context: Context,
     private val signalingClient: SignalingClient,
-    private val peerConnectionUtils: PeerConnectionUtils
+    private val peerConnectionUtils: PeerConnectionUtils,
 ) {
     private val sessionManagerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val peerConnectionExecutor = Executors.newSingleThreadExecutor()
@@ -56,7 +49,7 @@ class WebRtcSessionManager(
     }
 
     // getting front camera
-    private val videoCapturer = getFrontCameraCapturer()
+    lateinit var videoCapturer: VideoCapturer
 
     // we need it to initialize video capturer
     private val surfaceTextureHelper = SurfaceTextureHelper.create(
