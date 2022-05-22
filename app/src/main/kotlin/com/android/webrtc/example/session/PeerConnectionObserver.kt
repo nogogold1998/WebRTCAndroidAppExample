@@ -1,11 +1,8 @@
 package com.android.webrtc.example.session
 
-import org.webrtc.DataChannel
-import org.webrtc.IceCandidate
-import org.webrtc.MediaStream
-import org.webrtc.PeerConnection
-import org.webrtc.RtpTransceiver
-import org.webrtc.SdpObserver
+import android.util.Log
+import org.webrtc.*
+import java.nio.charset.StandardCharsets
 
 /**
  * [PeerConnection.Observer] implementation with default callbacks and ability to override them
@@ -42,7 +39,27 @@ class PeerConnectionObserver(
     override fun onRemoveStream(p0: MediaStream?) {
     }
 
-    override fun onDataChannel(p0: DataChannel?) {
+    override fun onDataChannel(dc: DataChannel?) {
+        val TAG = "PeerConnectionObserver"
+        Log.d(TAG, "onDataChannel: $dc")
+        if(dc == null) return
+        Log.d(TAG, "onDataChannel: ${dc.label()}, ${dc.id()}")
+        dc.registerObserver(object : DataChannel.Observer {
+            override fun onBufferedAmountChange(p0: Long) {
+                Log.i(TAG, "onBufferedAmountChange($p0)")
+            }
+
+            override fun onStateChange() {
+                Log.i(TAG, "onStateChange()")
+            }
+
+            override fun onMessage(p0: DataChannel.Buffer?) {
+                Log.i(TAG, "onMessage($p0)")
+                if (p0 == null) return
+                val i = StandardCharsets.UTF_8.decode(p0.data).toString()
+                Log.i(TAG, "onMessage: i = $i")
+            }
+        })
     }
 
     override fun onRenegotiationNeeded() {
@@ -52,5 +69,9 @@ class PeerConnectionObserver(
     override fun onTrack(transceiver: RtpTransceiver?) {
         super.onTrack(transceiver)
         onTrackCallback(transceiver)
+    }
+
+    override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {
+        Log.i("PeerConnectionObserver", "onAddTrack: $p0, ${p1?.toList()}")
     }
 }

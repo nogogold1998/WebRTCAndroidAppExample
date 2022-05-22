@@ -1,6 +1,9 @@
 package com.android.webrtc.example.ioc
 
 import android.content.Context
+import android.media.projection.MediaProjectionManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.android.webrtc.example.session.PeerConnectionUtils
 import com.android.webrtc.example.session.WebRtcSessionManager
 import com.android.webrtc.example.signaling.SignalingClient
@@ -10,6 +13,13 @@ import org.webrtc.EglBase
 object ServiceLocator {
     private lateinit var context: WeakReference<Context>
     val signalingClient = SignalingClient()
+
+     val mediaProjectionManager by lazy {
+        ContextCompat.getSystemService(
+            context.get() ?: error("context has not been initialized"),
+            MediaProjectionManager::class.java,
+        )!!
+    }
 
     private val peerConnectionUtils by lazy {
         PeerConnectionUtils(
